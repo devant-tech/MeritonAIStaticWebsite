@@ -1,35 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { GizmoHelper, GizmoViewport, OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { Canvas } from '@react-three/fiber'
 
-function App() {
-  const [count, setCount] = useState(0)
+import Scene from './scene'
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App = () => (
+  <Canvas>
+    <color attach="background" args={['black']} />
+    <ambientLight intensity={Math.PI / 2} />
+    <pointLight position={[5, 5, 0]} decay={0} intensity={Math.PI} />
+
+    <PerspectiveCamera makeDefault position={[1, 1, 1]} />
+    <OrbitControls makeDefault />
+
+    <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
+      <GizmoViewport labelColor="white" />
+    </GizmoHelper>
+
+    <Scene />
+  </Canvas>
+)
 
 export default App
