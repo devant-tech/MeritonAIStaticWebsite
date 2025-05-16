@@ -6,7 +6,7 @@ import shortid from 'shortid'
 import * as THREE from 'three'
 import { STLLoader } from 'three/addons/loaders/STLLoader.js'
 
-import { exportSTL, uploadSTL } from './utils/index'
+import { exportSTL, uploadSTL } from './index'
 import FFD, { ParametricCoordinate } from './ffd'
 
 const DEFAULT_MODEL_URL = 'sample.stl'

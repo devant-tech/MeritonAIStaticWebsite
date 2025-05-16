@@ -1,23 +1,44 @@
-import { GizmoHelper, GizmoViewport, OrbitControls, PerspectiveCamera } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
+import {
+    Navigate,
+    RouterProvider,
+    createBrowserRouter
+} from 'react-router-dom';
 
-import Scene from './scene'
+import ExampleApp from './components/Example/ExampleApp';
+import {
+    fullPublicRoutes,
+    halfPublicRoutes,
+    privateRoutes,
+    ROUTE_PATH
+} from './routes/routes';
 
-const App = () => (
-  <Canvas>
-    <color attach="background" args={['black']} />
-    <ambientLight intensity={Math.PI / 2} />
-    <pointLight position={[5, 5, 0]} decay={0} intensity={Math.PI} />
+const FullPublicLayout = () => {
+    return <ExampleApp />;
+};
+const HalfPublicLayout = () => {
+    return <ExampleApp />;
+};
+const PrivateLayout = () => {
+    return <ExampleApp />;
+};
 
-    <PerspectiveCamera makeDefault position={[1, 1, 1]} />
-    <OrbitControls makeDefault />
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <FullPublicLayout />,
+        children: [...fullPublicRoutes]
+    }, // both login or no login user can access
+    {
+        path: '/',
+        element: <HalfPublicLayout />,
+        children: [...halfPublicRoutes]
+    }, // only user without login can access
+    { path: '/', element: <PrivateLayout />, children: [...privateRoutes] }, // only user with login can access
+    { path: '*', element: <Navigate replace to={ROUTE_PATH.LOGIN} /> }
+]);
 
-    <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-      <GizmoViewport labelColor="white" />
-    </GizmoHelper>
+const App = () => {
+    return <RouterProvider router={router} />;
+};
 
-    <Scene />
-  </Canvas>
-)
-
-export default App
+export default App;
