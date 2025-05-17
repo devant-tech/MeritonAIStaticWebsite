@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import ExampleApp from '../components/Example/ExampleApp';
 import { lazy } from 'react';
+import Home from '../pages/Home';
 
 const SignIn = lazy(() => import('../pages/Authentication/SignIn/SignIn'));
 // const ResetPasswordRequest = lazy(
@@ -60,10 +61,9 @@ export const privateRoutes = [
         path: '/home',
         children: [
             {
-                path: 'agents/profile/:user_id',
+                path: '',
                 exact: true,
-                name: '',
-                Component: ExampleApp
+                Component: Home
             },
 
             {

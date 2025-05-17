@@ -1,25 +1,38 @@
 import {
     Navigate,
+    Outlet,
     RouterProvider,
     createBrowserRouter
 } from 'react-router-dom';
 
-import ExampleApp from './components/Example/ExampleApp';
 import {
     fullPublicRoutes,
     halfPublicRoutes,
     privateRoutes,
     ROUTE_PATH
 } from './routes/routes';
+import Menu from './components/Menu';
 
 const FullPublicLayout = () => {
-    return <ExampleApp />;
+    return (
+        <Menu>
+            <Outlet />
+        </Menu>
+    );
 };
 const HalfPublicLayout = () => {
-    return <ExampleApp />;
+    return (
+        <Menu>
+            <Outlet />
+        </Menu>
+    );
 };
 const PrivateLayout = () => {
-    return <ExampleApp />;
+    return (
+        <Menu>
+            <Outlet />
+        </Menu>
+    );
 };
 
 const router = createBrowserRouter([
