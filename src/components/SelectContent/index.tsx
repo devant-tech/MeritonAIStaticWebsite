@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MuiAvatar from '@mui/material/Avatar';
 import MuiListItemAvatar from '@mui/material/ListItemAvatar';
+import BusinessIcon from '@mui/icons-material/Business';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -9,8 +10,6 @@ import Select, { SelectChangeEvent, selectClasses } from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import SmartphoneRoundedIcon from '@mui/icons-material/SmartphoneRounded';
 
 const Avatar = styled(MuiAvatar)(({ theme }) => ({
     width: 28,
@@ -59,7 +58,7 @@ export default function SelectContent() {
             <MenuItem value="">
                 <ListItemAvatar>
                     <Avatar alt="Organization 1">
-                        <DevicesRoundedIcon sx={{ fontSize: '1rem' }} />
+                        <BusinessIcon sx={{ fontSize: '1rem' }} />
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary="Organization-1" secondary="Web app" />
@@ -67,7 +66,7 @@ export default function SelectContent() {
             <MenuItem value={10}>
                 <ListItemAvatar>
                     <Avatar alt="Organization 2">
-                        <SmartphoneRoundedIcon sx={{ fontSize: '1rem' }} />
+                        <BusinessIcon sx={{ fontSize: '1rem' }} />
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText

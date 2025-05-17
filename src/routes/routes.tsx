@@ -1,30 +1,26 @@
 import { Navigate } from 'react-router-dom';
-import ExampleApp from '../components/Example/ExampleApp';
+// lazy import following components
 import { lazy } from 'react';
-import Home from '../pages/Home';
-import Settings from '@pages/Settings';
-import Users from '@pages/Users';
-
-const SignIn = lazy(() => import('../pages/Authentication/SignIn/SignIn'));
-// const ResetPasswordRequest = lazy(
-//     () =>
-//         import(
-//             '../pages/Authentication/ResetPasswordRequest/ResetPasswordRequest'
-//         )
-// );
-// const ResetPassword = lazy(
-//     () => import('../pages/Authentication/ResetPassword/ResetPassword')
-// );
-// const AccountActivation = lazy(
-//     () => import('../pages/Authentication/Activation/Activation')
-// );
+const ExampleApp = lazy(() => import('@components/Example/ExampleApp'));
+const Home = lazy(() => import('@pages/Home'));
+const Settings = lazy(() => import('@pages/Settings'));
+const Users = lazy(() => import('@pages/Users'));
+const About = lazy(() => import('@pages/About'));
+const Tasks = lazy(() => import('@pages/Tasks'));
+const Profile = lazy(() => import('@pages/Profile'));
+const Account = lazy(() => import('@pages/Account'));
+const SignIn = lazy(() => import('@pages/Authentication/SignIn/SignIn'));
 
 export const ROUTE_PATH = {
-    HOME: '/home',
-    USER: '/users',
+    ABOUT: '/about',
+    AUTH: '/auth',
     ACCOUNT: '/account',
+    HOME: '/home',
+    PROFILE: '/profile',
     SETTINGS: '/settings',
-    LOGIN: '/account/login',
+    TASK: '/tasks',
+    USER: '/users',
+    LOGIN: '/auth/login',
     FORGOT_PASSWORD: 'forgot-password',
     RESET_PASSWORD: 'reset-password',
     VERIFY_EMAIL: 'verify-email'
@@ -39,7 +35,7 @@ export const fullPublicRoutes = [
 
 export const halfPublicRoutes = [
     {
-        path: ROUTE_PATH.ACCOUNT,
+        path: ROUTE_PATH.AUTH,
         children: [
             {
                 path: ROUTE_PATH.LOGIN,
@@ -91,6 +87,26 @@ export const privateRoutes = [
         path: ROUTE_PATH.USER,
         exact: true,
         Component: Users
+    },
+    {
+        path: ROUTE_PATH.TASK,
+        exact: true,
+        Component: Tasks
+    },
+    {
+        path: ROUTE_PATH.ABOUT,
+        exact: true,
+        Component: About
+    },
+    {
+        path: ROUTE_PATH.PROFILE,
+        exact: true,
+        Component: Profile
+    },
+    {
+        path: ROUTE_PATH.ACCOUNT,
+        exact: true,
+        Component: Account
     },
     {
         path: '/',

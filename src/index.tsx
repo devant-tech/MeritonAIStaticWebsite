@@ -4,7 +4,6 @@ import { I18nextProvider } from 'react-i18next';
 
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './assets/styles/main.css';
 import { SnackBarProvider } from './contexts/use-snack-bar';
 import { queryClient } from './api/client';
 import AppTheme from './components/ThemeProvider';

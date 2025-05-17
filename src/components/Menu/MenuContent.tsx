@@ -19,8 +19,8 @@ const mainListItems = [
 ];
 
 const secondaryListItems = [
-    { text: 'Settings', icon: <SettingsRoundedIcon /> },
-    { text: 'About', icon: <InfoRoundedIcon /> }
+    { text: 'Settings', icon: <SettingsRoundedIcon />, path: '/settings' },
+    { text: 'About', icon: <InfoRoundedIcon />, path: '/about' }
 ];
 
 export default function MenuContent() {
@@ -52,7 +52,11 @@ export default function MenuContent() {
                         disablePadding
                         sx={{ display: 'block' }}
                     >
-                        <ListItemButton>
+                        <ListItemButton
+                            component={LinkDom}
+                            selected={item.path === location.pathname}
+                            to={item.path || ''}
+                        >
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.text} />
                         </ListItemButton>

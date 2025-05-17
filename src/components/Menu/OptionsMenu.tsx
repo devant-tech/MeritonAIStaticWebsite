@@ -10,6 +10,8 @@ import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from './MenuButton';
+import { ROUTE_PATH } from '@routes/routes';
+import { useNavigate } from 'react-router-dom';
 
 const MenuItem = styled(MuiMenuItem)({
     margin: '2px 0'
@@ -18,10 +20,15 @@ const MenuItem = styled(MuiMenuItem)({
 export default function OptionsMenu() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const handleNavigateClose = (path: string) => {
+        navigate(path);
         setAnchorEl(null);
     };
     return (
@@ -53,14 +60,28 @@ export default function OptionsMenu() {
                     }
                 }}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem
+                    onClick={() => handleNavigateClose(ROUTE_PATH.PROFILE)}
+                >
+                    Profile
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleNavigateClose(ROUTE_PATH.ACCOUNT)}
+                >
+                    My account
+                </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>Add another account</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <MenuItem onClick={() => handleNavigateClose(ROUTE_PATH.TASK)}>
+                    Add another account
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleNavigateClose(ROUTE_PATH.SETTINGS)}
+                >
+                    Settings
+                </MenuItem>
                 <Divider />
                 <MenuItem
-                    onClick={handleClose}
+                    onClick={() => handleNavigateClose('/')}
                     sx={{
                         [`& .${listItemIconClasses.root}`]: {
                             ml: 'auto',
