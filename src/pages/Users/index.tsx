@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material';
+
 export default function Users() {
-    return <div>Users</div>;
+    return <Typography variant="h1">Users</Typography>;
 }

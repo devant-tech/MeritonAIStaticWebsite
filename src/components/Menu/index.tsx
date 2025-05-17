@@ -1,133 +1,34 @@
 import {
     AppBar,
     Avatar,
-    Badge,
     Box,
     CssBaseline,
     Drawer,
     drawerClasses,
-    IconButton,
-    ListItemIcon,
-    Menu,
     Stack,
     Toolbar,
-    Tooltip,
-    Typography,
-    useMediaQuery,
-    useTheme
+    Typography
 } from '@mui/material';
-import MailIcon from '@mui/icons-material/Mail';
-import { useNavigate } from 'react-router-dom';
+import { alpha } from '@mui/material/styles';
 import { useState } from 'react';
-import { Menu as MenuIcon } from '@mui/icons-material';
-import { t } from 'i18next';
-import { stringAvatar } from '@utils/helper';
-import MenuItem from '@mui/material/MenuItem';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import Divider from '@mui/material/Divider';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { ROUTE_PATH } from '@routes/routes';
-import { logout } from '@api/apis';
+
 import SelectContent from '@components/SelectContent';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+import ColorModeIconDropdown from './ColorModeIconDropdown';
+import MenuButton from './MenuButton';
+import SideMenuMobile from './SideMenuMobile';
 
-const drawerWidth = 200;
 const appBarHeight = 64; // Standard Material-UI AppBar height
-
-const RenderMenu = ({
-    anchorEl,
-    handleClose,
-    isMenuOpen,
-    handleCloseProfile,
-    handleCloseSettings,
-    handleCloseLogout
-}: any) => (
-    <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        id="account-menu"
-        onClick={handleClose}
-        onClose={handleClose}
-        open={isMenuOpen}
-        sx={{
-            // overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1
-            },
-            '&::before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0
-            }
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-    >
-        <MenuItem onClick={handleCloseProfile}>
-            <Avatar />
-            {`Test User`}
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleCloseSettings}>
-            <ListItemIcon>
-                <SettingsIcon fontSize="small" />
-            </ListItemIcon>
-            {t('Settings', { ns: 'common' })}
-        </MenuItem>
-        <MenuItem onClick={handleCloseLogout}>
-            <ListItemIcon>
-                <LogoutIcon fontSize="small" />
-            </ListItemIcon>
-            {t('Log Out', { ns: 'common' })}
-        </MenuItem>
-    </Menu>
-);
 
 export default function AppMenu({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
-    const theme = useTheme();
-    const ismobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const navigate = useNavigate();
-
-    const menuId = 'primary-search-account-menu';
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const isMenuOpen = Boolean(anchorEl);
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleCloseProfile = () => {
-        setAnchorEl(null);
-        // setMobileMoreAnchorEl(null);
-        navigate(ROUTE_PATH.SETTINGS);
-    };
-
-    const handleCloseSettings = () => {
-        setAnchorEl(null);
-        // setMobileMoreAnchorEl(null);
-        navigate(ROUTE_PATH.SETTINGS);
-    };
-    const handleCloseLogout = () => {
-        setAnchorEl(null);
-        // setMobileMoreAnchorEl(null);
-        logout();
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpen(newOpen);
     };
 
     return (
@@ -136,79 +37,55 @@ export default function AppMenu({ children }: { children: React.ReactNode }) {
             <AppBar
                 position="fixed"
                 sx={{
-                    transition: theme.transitions.create(['margin', 'width'], {
-                        easing: theme.transitions.easing.sharp,
-                        duration: theme.transitions.duration.leavingScreen
-                    }), // width: `calc(100% - ${0}px)`,
-                    marginLeft: ismobile === true ? 0 : `-${drawerWidth}px`,
-                    ...(open && {
-                        width:
-                            ismobile === true
-                                ? '100%'
-                                : `calc(100% - ${drawerWidth}px)`,
-                        // marginLeft: ismobile ? `${drawerWidth}px` : 0,
-                        transition: theme.transitions.create(
-                            ['margin', 'width'],
-                            {
-                                easing: theme.transitions.easing.easeOut,
-                                duration:
-                                    theme.transitions.duration.enteringScreen
-                            }
-                        )
-                    })
+                    display: { xs: 'auto', md: 'none' },
+                    boxShadow: 0,
+                    bgcolor: 'background.paper',
+                    backgroundImage: 'none',
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                    top: 'var(--template-frame-height, 0px)'
                 }}
             >
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        onClick={() => setOpen(!open)}
+                <Toolbar variant="regular">
+                    <Stack
+                        direction="row"
+                        sx={{
+                            alignItems: 'center',
+                            flexGrow: 1,
+                            width: '100%',
+                            gap: 1
+                        }}
                     >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6">Menu</Typography>
-
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton
-                            aria-controls={'123'}
-                            aria-haspopup="true"
-                            aria-label="show unread new messages"
-                            color="inherit"
-                            // onClick={handleOpenChat}
-                            size="large"
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{ justifyContent: 'center', mr: 'auto' }}
                         >
-                            <Badge badgeContent={2} color="error">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <Tooltip
-                            placement="bottom-start"
-                            title="Account settings"
-                        >
-                            <IconButton
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                aria-label="account of current user"
-                                color="inherit"
-                                edge="end"
-                                onClick={handleProfileMenuOpen}
-                                size="large"
+                            <CustomIcon />
+                            <Typography
+                                variant="h4"
+                                component="h1"
+                                sx={{ color: 'text.primary' }}
                             >
-                                <Avatar
-                                    {...stringAvatar(`Test User`)}
-                                    size="small"
-                                    title={`Test User`}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
+                                Dashboard
+                            </Typography>
+                        </Stack>
+                        <ColorModeIconDropdown />
+                        <MenuButton
+                            aria-label="menu"
+                            onClick={toggleDrawer(true)}
+                        >
+                            <MenuRoundedIcon />
+                        </MenuButton>
+                        <SideMenuMobile
+                            open={open}
+                            toggleDrawer={toggleDrawer}
+                        />
+                    </Stack>
                 </Toolbar>
             </AppBar>
             <Drawer
-                variant={ismobile ? 'temporary' : 'persistent'}
-                open={open}
+                variant="permanent"
                 onClose={() => setOpen(false)}
                 sx={{
                     display: { xs: 'none', md: 'block' },
@@ -272,45 +149,57 @@ export default function AppMenu({ children }: { children: React.ReactNode }) {
             </Drawer>
             <Box
                 component="main"
-                sx={{
+                sx={(theme) => ({
                     flexGrow: 1,
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    height: '100%',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    transition: theme.transitions.create('margin', {
-                        easing: theme.transitions.easing.sharp,
-                        duration: theme.transitions.duration.leavingScreen
-                    }),
-                    marginLeft: ismobile === true ? 0 : `-${drawerWidth}px`,
-                    ...(open && {
-                        transition: theme.transitions.create('margin', {
-                            easing: theme.transitions.easing.easeOut,
-                            duration: theme.transitions.duration.enteringScreen
-                        }),
-                        marginLeft: 0
-                    })
-                }}
+                    backgroundColor: theme.vars
+                        ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+                        : alpha(theme.palette.background.default, 1),
+                    overflow: 'auto'
+                })}
             >
-                <Toolbar /> {/* Spacer for AppBar */}
                 <Box
                     sx={{
-                        height: `calc(100vh - ${appBarHeight}px)`,
-                        position: 'relative',
-                        overflow: 'hidden'
+                        width: '100%',
+                        maxWidth: { sm: '100%', md: '1700px' }
                     }}
                 >
-                    {children}
-                    <RenderMenu
-                        anchorEl={anchorEl}
-                        handleClose={handleClose}
-                        handleCloseLogout={handleCloseLogout}
-                        handleCloseProfile={handleCloseProfile}
-                        handleCloseSettings={handleCloseSettings}
-                        isMenuOpen={isMenuOpen}
-                    />
+                    <Toolbar /> {/* Spacer for AppBar */}
+                    <Box
+                        sx={{
+                            height: `calc(100vh - ${appBarHeight}px)`,
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {children}
+                    </Box>
                 </Box>
             </Box>
+        </Box>
+    );
+}
+
+export function CustomIcon() {
+    return (
+        <Box
+            sx={{
+                width: '1.5rem',
+                height: '1.5rem',
+                bgcolor: 'black',
+                borderRadius: '999px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                backgroundImage:
+                    'linear-gradient(135deg, hsl(210, 98%, 60%) 0%, hsl(210, 100%, 35%) 100%)',
+                color: 'hsla(210, 100%, 95%, 0.9)',
+                border: '1px solid',
+                borderColor: 'hsl(210, 100%, 55%)',
+                boxShadow: 'inset 0 2px 5px rgba(255, 255, 255, 0.3)'
+            }}
+        >
+            <DashboardRoundedIcon color="inherit" sx={{ fontSize: '1rem' }} />
         </Box>
     );
 }
