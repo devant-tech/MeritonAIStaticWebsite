@@ -126,6 +126,37 @@ const Scene = () => {
         gui.domElement.style.transform = 'translateY(-50%)';
         gui.domElement.style.zIndex = '1300';
 
+        // Make draggable
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        const onMouseDown = (e: MouseEvent) => {
+            isDragging = true;
+            // Get the mouse position relative to the panel
+            offsetX = e.clientX - gui.domElement.getBoundingClientRect().left;
+            offsetY = e.clientY - gui.domElement.getBoundingClientRect().top;
+            document.body.style.userSelect = 'none';
+        };
+
+        const onMouseMove = (e: MouseEvent) => {
+            if (!isDragging) return;
+            gui.domElement.style.left = `${e.clientX - offsetX}px`;
+            gui.domElement.style.top = `${e.clientY - offsetY}px`;
+            gui.domElement.style.right = 'auto';
+            gui.domElement.style.transform = 'none';
+        };
+
+        const onMouseUp = () => {
+            isDragging = false;
+            document.body.style.userSelect = '';
+        };
+
+        // Attach to the panel's title bar (or the whole panel)
+        gui.domElement.addEventListener('mousedown', onMouseDown);
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+
         const config = {
             showSkeleton: true,
             download: () => {
