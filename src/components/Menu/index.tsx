@@ -21,7 +21,7 @@ import OptionsMenu from './OptionsMenu';
 import ColorModeIconDropdown from './ColorModeIconDropdown';
 import MenuButton from './MenuButton';
 import SideMenuMobile from './SideMenuMobile';
-
+import Header from './Header';
 const appBarHeight = 64; // Standard Material-UI AppBar height
 
 export default function AppMenu({ children }: { children: React.ReactNode }) {
@@ -157,23 +157,26 @@ export default function AppMenu({ children }: { children: React.ReactNode }) {
                     overflow: 'auto'
                 })}
             >
-                <Box
+                <Stack
+                    spacing={2}
                     sx={{
-                        width: '100%',
-                        maxWidth: { sm: '100%', md: '1700px' }
+                        height: `calc(100vh - ${appBarHeight}px)`,
+                        alignItems: 'center',
+                        mx: 3,
+                        pb: 5,
+                        mt: { xs: 8, md: 0 }
                     }}
                 >
-                    <Toolbar /> {/* Spacer for AppBar */}
+                    <Header />
                     <Box
                         sx={{
-                            height: `calc(100vh - ${appBarHeight}px)`,
-                            position: 'relative',
-                            overflow: 'hidden'
+                            width: '100%',
+                            maxWidth: { sm: '100%', md: '1700px' }
                         }}
                     >
                         {children}
                     </Box>
-                </Box>
+                </Stack>
             </Box>
         </Box>
     );
