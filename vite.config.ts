@@ -14,7 +14,8 @@ export default defineConfig({
             '@components': path.resolve(root, 'components'),
             '@contexts': path.resolve(root, 'contexts'),
             '@pages': path.resolve(root, 'pages'),
-            '@routes': path.resolve(root, 'routes')
+            '@routes': path.resolve(root, 'routes'),
+            '@utils': path.resolve(root, 'utils')
         }
     },
     test: {

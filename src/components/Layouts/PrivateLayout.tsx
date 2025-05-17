@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@contexts/use-auth';
 import { ROUTE_PATH } from '@routes/routes';
 
-import Menu from '../Menu';
+import AppMenu from '../Menu';
 
 export const PrivateLayout = () => {
     const { isAuthenticated } = useAuth();
@@ -19,8 +19,8 @@ export const PrivateLayout = () => {
         }
     }
     return (
-        <Menu>
+        <AppMenu>
             <Outlet />
-        </Menu>
+        </AppMenu>
     );
 };

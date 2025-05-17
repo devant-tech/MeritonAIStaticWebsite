@@ -28,6 +28,7 @@
             "@contexts/*": ["src/contexts/*"],
             "@pages/*": ["src/pages/*"],
             "@routes/*": ["src/routes/*"],
+            "@utils/*": ["src/utils/*"],
             "@*": ["src/*"]
         }
     },

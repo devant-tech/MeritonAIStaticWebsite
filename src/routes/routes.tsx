@@ -3,6 +3,7 @@ import ExampleApp from '../components/Example/ExampleApp';
 import { lazy } from 'react';
 import Home from '../pages/Home';
 import Settings from '@pages/Settings';
+import Users from '@pages/Users';
 
 const SignIn = lazy(() => import('../pages/Authentication/SignIn/SignIn'));
 // const ResetPasswordRequest = lazy(
@@ -20,6 +21,7 @@ const SignIn = lazy(() => import('../pages/Authentication/SignIn/SignIn'));
 
 export const ROUTE_PATH = {
     HOME: '/home',
+    USER: '/users',
     ACCOUNT: '/account',
     SETTINGS: '/settings',
     LOGIN: '/account/login',
@@ -84,6 +86,11 @@ export const privateRoutes = [
         path: ROUTE_PATH.SETTINGS,
         exact: true,
         Component: Settings
+    },
+    {
+        path: ROUTE_PATH.USER,
+        exact: true,
+        Component: Users
     },
     {
         path: '/',

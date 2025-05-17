@@ -2,7 +2,6 @@ export const stringToColor = (str: string) => {
     let hash = 0;
     let i;
 
-     
     for (i = 0; i < str.length; i += 1) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
@@ -13,7 +12,6 @@ export const stringToColor = (str: string) => {
         const value = (hash >> (i * 8)) & 0xff;
         color += `00${value.toString(16)}`.slice(-2);
     }
-     
 
     return color;
 };
@@ -26,7 +24,7 @@ const getBrightness = (hexColor: string) => {
     return (r * 299 + g * 587 + b * 114) / 1000;
 };
 
-export const stringAvatar = (name: string) => {
+export const stringAvatar = (name: string): any => {
     const backgroundColor = stringToColor(name);
 
     const textColor =

@@ -1,8 +1,9 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { translation_resources } from './i18next/translation';
 
-i18n.use(initReactI18next) // passes i18n down to react-i18next
+i18next
+    .use(initReactI18next) // passes i18n down to react-i18next
     .init({
         compatibilityJSON: 'v4',
         resources: translation_resources,
@@ -18,4 +19,4 @@ i18n.use(initReactI18next) // passes i18n down to react-i18next
         }
     });
 
-export default i18n;
+export default i18next;
