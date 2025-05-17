@@ -1,35 +1,58 @@
-import { createContext, useContext, useState } from 'react';
-import { ThemeProvider } from '@mui/material';
-import themeLight from './themeLight';
-import themeDark from './themeDark';
+import * as React from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
+import { inputsCustomizations } from './customizations/inputs';
+import { dataDisplayCustomizations } from './customizations/dataDisplay';
+import { feedbackCustomizations } from './customizations/feedback';
+import { navigationCustomizations } from './customizations/navigation';
+import { surfacesCustomizations } from './customizations/surfaces';
+import {
+    colorSchemes,
+    typography,
+    shadows,
+    shape
+} from '../../theme/customizations/themePrimitives';
 
-const CustomThemeContext = createContext<unknown>(null);
-
-export const CustomThemeProvider = ({
-    children
-}: {
+interface AppThemeProps {
     children: React.ReactNode;
-}) => {
-    const isStoredDarkMode = localStorage.getItem('mode') === 'dark';
-    const [isDarkMode, setIsDarkMode] = useState(isStoredDarkMode);
+    /**
+     * This is for the docs site. You can ignore it or remove it.
+     */
+    disableCustomTheme?: boolean;
+    themeComponents?: ThemeOptions['components'];
+}
 
-    const toggleDarkMode = () => {
-        localStorage.setItem('mode', !isDarkMode ? 'dark' : 'light');
-        setIsDarkMode(!isDarkMode);
-    };
-
-    const themeData = { isDarkMode, toggleDarkMode };
-
+export default function AppTheme(props: AppThemeProps) {
+    const { children, disableCustomTheme, themeComponents } = props;
+    const theme = React.useMemo(() => {
+        return disableCustomTheme
+            ? {}
+            : createTheme({
+                  // For more details about CSS variables configuration, see https://mui.com/material-ui/customization/css-theme-variables/configuration/
+                  cssVariables: {
+                      colorSchemeSelector: 'data-mui-color-scheme',
+                      cssVarPrefix: 'template'
+                  },
+                  colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
+                  typography,
+                  shadows,
+                  shape,
+                  components: {
+                      ...inputsCustomizations,
+                      ...dataDisplayCustomizations,
+                      ...feedbackCustomizations,
+                      ...navigationCustomizations,
+                      ...surfacesCustomizations,
+                      ...themeComponents
+                  }
+              });
+    }, [disableCustomTheme, themeComponents]);
+    if (disableCustomTheme) {
+        return <React.Fragment>{children}</React.Fragment>;
+    }
     return (
-        <CustomThemeContext.Provider value={themeData}>
-            <ThemeProvider theme={isDarkMode ? themeDark : themeLight}>
-                {children}
-            </ThemeProvider>
-        </CustomThemeContext.Provider>
+        <ThemeProvider theme={theme} disableTransitionOnChange>
+            {children}
+        </ThemeProvider>
     );
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useCustomTheme = () => {
-    return useContext(CustomThemeContext);
-};
+}

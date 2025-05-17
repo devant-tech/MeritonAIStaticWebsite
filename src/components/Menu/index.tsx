@@ -3,28 +3,23 @@ import {
     Avatar,
     Badge,
     Box,
-    Collapse,
     CssBaseline,
     Drawer,
+    drawerClasses,
     IconButton,
-    List,
-    ListItemButton,
     ListItemIcon,
-    ListItemText,
     Menu,
+    Stack,
     Toolbar,
     Tooltip,
     Typography,
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 import MailIcon from '@mui/icons-material/Mail';
-import { Link as LinkDom, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import { MenuSidebar } from './sidebar';
 import { t } from 'i18next';
 import { stringAvatar } from '@utils/helper';
 import MenuItem from '@mui/material/MenuItem';
@@ -33,6 +28,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ROUTE_PATH } from '@routes/routes';
 import { logout } from '@api/apis';
+import SelectContent from '@components/SelectContent';
+import MenuContent from './MenuContent';
+import OptionsMenu from './OptionsMenu';
+
 const drawerWidth = 200;
 const appBarHeight = 64; // Standard Material-UI AppBar height
 
@@ -99,18 +98,10 @@ const RenderMenu = ({
 export default function AppMenu({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState(false);
     const theme = useTheme();
-    const location = useLocation();
     const ismobile = useMediaQuery(theme.breakpoints.down('md'));
-    const initialMenuItemOpen: any =
-        MenuSidebar?.reduce((acc: any, menuItem) => {
-            acc[menuItem.id] = menuItem.children?.some(
-                (subItem: any) => subItem.url === location.pathname
-            );
-            return acc;
-        }, {}) || {};
+
     const navigate = useNavigate();
 
-    const [menuItemOpen, setMenuItemOpen] = useState(initialMenuItemOpen);
     const menuId = 'primary-search-account-menu';
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorEl);
@@ -220,93 +211,64 @@ export default function AppMenu({ children }: { children: React.ReactNode }) {
                 open={open}
                 onClose={() => setOpen(false)}
                 sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: drawerWidth,
-                        boxSizing: 'border-box',
-                        height: '100%',
-                        top: appBarHeight
+                    display: { xs: 'none', md: 'block' },
+                    [`& .${drawerClasses.paper}`]: {
+                        backgroundColor: 'background.paper'
                     }
                 }}
             >
-                <List disablePadding>
-                    {MenuSidebar.map((menuItem) =>
-                        menuItem.children ? (
-                            <Box key={menuItem.id}>
-                                <ListItemButton
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setMenuItemOpen((prevState: any) => ({
-                                            ...prevState,
-                                            [menuItem.id]:
-                                                prevState[menuItem.id] ===
-                                                undefined
-                                                    ? true
-                                                    : !prevState[menuItem.id]
-                                        }));
-                                    }}
-                                >
-                                    <ListItemText primary={menuItem.title} />
-                                    {menuItemOpen[menuItem.id] ? (
-                                        <ExpandLess />
-                                    ) : (
-                                        <ExpandMore />
-                                    )}
-                                </ListItemButton>
-                                <Collapse
-                                    in={menuItemOpen[menuItem.id]}
-                                    timeout="auto"
-                                    unmountOnExit
-                                >
-                                    <List disablePadding>
-                                        {menuItem.children.map(
-                                            (subMenuItem) => (
-                                                <ListItemButton
-                                                    component={LinkDom}
-                                                    key={subMenuItem.id}
-                                                    selected={
-                                                        subMenuItem.url ===
-                                                        location.pathname
-                                                    }
-                                                    sx={{ pl: 4 }}
-                                                    to={subMenuItem.url || ''}
-                                                >
-                                                    <ListItemIcon
-                                                        sx={{ mr: -3 }}
-                                                    >
-                                                        {subMenuItem.icon}
-                                                    </ListItemIcon>
-                                                    <ListItemText
-                                                        primary={
-                                                            subMenuItem.title
-                                                        }
-                                                    />
-                                                </ListItemButton>
-                                            )
-                                        )}
-                                    </List>
-                                </Collapse>
-                            </Box>
-                        ) : (
-                            <ListItemButton
-                                component={LinkDom}
-                                key={menuItem.id}
-                                selected={menuItem.url === location.pathname}
-                                to={menuItem.url || ''}
-                            >
-                                <ListItemIcon sx={{ mr: -3 }}>
-                                    {menuItem.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={t(menuItem.title, {
-                                        ns: 'common'
-                                    })}
-                                />
-                            </ListItemButton>
-                        )
-                    )}
-                </List>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        mt: 'calc(var(--template-frame-height, 0px) + 4px)',
+                        p: 1.5
+                    }}
+                >
+                    <SelectContent />
+                </Box>
+                <Divider />
+                <Box
+                    sx={{
+                        overflow: 'auto',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
+                >
+                    <MenuContent />
+                </Box>
+                <Stack
+                    direction="row"
+                    sx={{
+                        p: 2,
+                        gap: 1,
+                        alignItems: 'center',
+                        borderTop: '1px solid',
+                        borderColor: 'divider'
+                    }}
+                >
+                    <Avatar
+                        sizes="small"
+                        alt="Test User"
+                        src="/static/images/avatar/7.jpg"
+                        sx={{ width: 36, height: 36 }}
+                    />
+                    <Box sx={{ mr: 'auto' }}>
+                        <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 500, lineHeight: '16px' }}
+                        >
+                            Test User
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            sx={{ color: 'text.secondary' }}
+                        >
+                            test@gmail.com
+                        </Typography>
+                    </Box>
+                    <OptionsMenu />
+                </Stack>
             </Drawer>
             <Box
                 component="main"
