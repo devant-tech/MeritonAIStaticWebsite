@@ -1,20 +1,15 @@
 import axios from 'axios';
 
 export const BASE_URL =
-    process.env.NODE_ENV === 'development'
-        ? process.env.REACT_APP_DEV_URL
-        : process.env.REACT_APP_PROD_URL;
-
-const tenantId =
-    process.env.NODE_ENV === 'development'
-        ? process.env.REACT_APP_DEV_TENANT_ID
-        : process.env.REACT_APP_TENANT_ID;
-
+    import.meta.env.VITE_ENV === 'development'
+        ? import.meta.env.VITE_APP_DEV_URL
+        : import.meta.env.VITE_APP_PROD_URL;
+console.log(import.meta.env.MODE);
+console.log(import.meta.env.VITE_ENV);
 const request = axios.create({
     baseURL: BASE_URL,
     headers: {
-        'Content-Type': 'application/json',
-        tenantId: tenantId
+        'Content-Type': 'application/json'
     },
     withCredentials: true,
     validateStatus: (status: number) => status < 500

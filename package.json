@@ -14,7 +14,7 @@
         "i18n": "i18next-scanner --config i18next-scanner.config.engine.cjs"
     },
     "lint-staged": {
-        "**/*.ts": [
+        "**/*.{ts,tsx}": [
             "prettier --write",
             "eslint --fix --cache",
             "git add"

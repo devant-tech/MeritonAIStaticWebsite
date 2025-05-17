@@ -1,6 +1,5 @@
 import {
     Navigate,
-    Outlet,
     RouterProvider,
     createBrowserRouter
 } from 'react-router-dom';
@@ -11,29 +10,9 @@ import {
     privateRoutes,
     ROUTE_PATH
 } from './routes/routes';
-import Menu from './components/Menu';
-
-const FullPublicLayout = () => {
-    return (
-        <Menu>
-            <Outlet />
-        </Menu>
-    );
-};
-const HalfPublicLayout = () => {
-    return (
-        <Menu>
-            <Outlet />
-        </Menu>
-    );
-};
-const PrivateLayout = () => {
-    return (
-        <Menu>
-            <Outlet />
-        </Menu>
-    );
-};
+import { PrivateLayout } from '@components/Layouts/PrivateLayout';
+import { HalfPublicLayout } from './components/Layouts/HalfPublicLayout';
+import { FullPublicLayout } from './components/Layouts/FullPublicLayout';
 
 const router = createBrowserRouter([
     {

@@ -7,13 +7,17 @@ import './assets/styles/main.css';
 import { SnackBarProvider } from './contexts/use-snack-bar';
 import { queryClient } from './api/client';
 import { CustomThemeProvider } from './components/ThemeProvider';
+import { AuthProvider } from './contexts/use-auth';
+
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
     <StrictMode>
         <CustomThemeProvider>
             <SnackBarProvider>
                 <QueryClientProvider client={queryClient}>
-                    <App />
+                    <AuthProvider>
+                        <App />
+                    </AuthProvider>
                 </QueryClientProvider>
             </SnackBarProvider>
         </CustomThemeProvider>

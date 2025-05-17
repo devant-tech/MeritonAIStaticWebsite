@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 import ExampleApp from '../components/Example/ExampleApp';
 import { lazy } from 'react';
 import Home from '../pages/Home';
+import Settings from '@pages/Settings';
 
 const SignIn = lazy(() => import('../pages/Authentication/SignIn/SignIn'));
 // const ResetPasswordRequest = lazy(
@@ -19,7 +20,9 @@ const SignIn = lazy(() => import('../pages/Authentication/SignIn/SignIn'));
 
 export const ROUTE_PATH = {
     HOME: '/home',
-    LOGIN: 'login',
+    ACCOUNT: '/account',
+    SETTINGS: '/settings',
+    LOGIN: '/account/login',
     FORGOT_PASSWORD: 'forgot-password',
     RESET_PASSWORD: 'reset-password',
     VERIFY_EMAIL: 'verify-email'
@@ -34,12 +37,12 @@ export const fullPublicRoutes = [
 
 export const halfPublicRoutes = [
     {
-        path: '/account',
+        path: ROUTE_PATH.ACCOUNT,
         children: [
             {
                 path: ROUTE_PATH.LOGIN,
                 Component: SignIn
-            },
+            }
             // {
             //     path: ROUTE_PATH.FORGOT_PASSWORD,
             //     Component: ResetPasswordRequest
@@ -53,12 +56,16 @@ export const halfPublicRoutes = [
             //     Component: AccountActivation
             // }
         ]
+    },
+    {
+        path: '/',
+        element: <Navigate to={ROUTE_PATH.HOME} />
     }
 ];
 
 export const privateRoutes = [
     {
-        path: '/home',
+        path: ROUTE_PATH.HOME,
         children: [
             {
                 path: '',
@@ -69,10 +76,14 @@ export const privateRoutes = [
             {
                 path: 'members',
                 exact: true,
-                name: '',
                 Component: ExampleApp
             }
         ]
+    },
+    {
+        path: ROUTE_PATH.SETTINGS,
+        exact: true,
+        Component: Settings
     },
     {
         path: '/',
