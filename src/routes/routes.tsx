@@ -20,7 +20,7 @@ export const ROUTE_PATH = {
     HOME: '/home',
     PROFILE: '/profile',
     SETTINGS: '/settings',
-    TASKS: '/Ss',
+    TASKS: '/tasks',
     USER: '/users',
     LOGIN: '/auth/login',
     FORGOT_PASSWORD: 'forgot-password',
