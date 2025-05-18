@@ -71,7 +71,7 @@ export default function OptionsMenu() {
                     My account
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={() => handleNavigateClose(ROUTE_PATH.TASK)}>
+                <MenuItem onClick={() => handleNavigateClose(ROUTE_PATH.TASKS)}>
                     Add another account
                 </MenuItem>
                 <MenuItem

@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 // lazy import following components
 import { lazy } from 'react';
+import Design from '@pages/Design';
 const ExampleApp = lazy(() => import('@components/Example/ExampleApp'));
 const Home = lazy(() => import('@pages/Home'));
 const Settings = lazy(() => import('@pages/Settings'));
@@ -15,10 +16,11 @@ export const ROUTE_PATH = {
     ABOUT: '/about',
     AUTH: '/auth',
     ACCOUNT: '/account',
+    DESIGN: '/design',
     HOME: '/home',
     PROFILE: '/profile',
     SETTINGS: '/settings',
-    TASK: '/tasks',
+    TASKS: '/Ss',
     USER: '/users',
     LOGIN: '/auth/login',
     FORGOT_PASSWORD: 'forgot-password',
@@ -89,9 +91,14 @@ export const privateRoutes = [
         Component: Users
     },
     {
-        path: ROUTE_PATH.TASK,
+        path: ROUTE_PATH.TASKS,
         exact: true,
         Component: Tasks
+    },
+    {
+        path: ROUTE_PATH.DESIGN,
+        exact: true,
+        Component: Design
     },
     {
         path: ROUTE_PATH.ABOUT,

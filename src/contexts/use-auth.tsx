@@ -55,12 +55,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleLogout = () => {
+        console.log('logout');
         logout().then(
             () => {
                 setUserdata((state) => ({
                     ...state,
                     data: null
                 }));
+                setIsAuthenticated(false);
             },
             (error) => {
                 setUserdata((state) => ({
@@ -68,6 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     isLoaded: true,
                     error
                 }));
+                setIsAuthenticated(false);
             }
         );
 

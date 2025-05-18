@@ -9,6 +9,7 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
+import { useAuth } from '@contexts/use-auth';
 
 interface SideMenuMobileProps {
     open: boolean | undefined;
@@ -19,6 +20,7 @@ export default function SideMenuMobile({
     open,
     toggleDrawer
 }: SideMenuMobileProps) {
+    const { logout } = useAuth();
     return (
         <Drawer
             anchor="right"
@@ -65,6 +67,9 @@ export default function SideMenuMobile({
                 <CardAlert />
                 <Stack sx={{ p: 2 }}>
                     <Button
+                        onClick={() => {
+                            logout();
+                        }}
                         variant="outlined"
                         fullWidth
                         startIcon={<LogoutRoundedIcon />}
