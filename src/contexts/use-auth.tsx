@@ -17,34 +17,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         verify().then(
-            // (resp) => {
-            //     const { data, success } = resp.data;
-            //     if (success) {
-            //         // TODO: to be remove in production
-            //         // setTimeout(function () {
-            //         setUserdata((state) => ({
-            //             ...state,
-            //             success: true,
-            //             data: data,
-            //             isLoaded: true
-            //         }));
-            //         setIsAuthenticated(true);
-            //         // }, 1000);
-            //     } else {
-            //         // setTimeout(function () {
-            //         setUserdata((state) => ({
-            //             ...state,
-            //             data: null,
-            //             isLoaded: true
-            //         }));
-            //         // }, 1000);
-            //     }
-            // },
             (resp) => {
-                console.log(resp);
+                const { data, success } = resp.data;
+                if (success) {
+                    setUserdata((state) => ({
+                        ...state,
+                        success: true,
+                        data: data as unknown as null, // Type assertion to match state type
+                        isLoaded: true
+                    }));
+                    setIsAuthenticated(true);
+                } else {
+                    setUserdata((state) => ({
+                        ...state,
+                        data: null,
+                        isLoaded: true
+                    }));
+                }
             },
             (error) => {
-                setIsAuthenticated(true);
                 setUserdata((state) => ({
                     ...state,
                     isLoaded: true,
@@ -61,7 +52,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             data: data
         }));
         setIsAuthenticated(true);
-        // forceUpdate({});
     };
 
     const handleLogout = () => {

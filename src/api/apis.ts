@@ -13,8 +13,13 @@ export const resetPassword = ({
     token: string;
 }) => request.post('/auth/reset-password', { email, password, token });
 
+// export const login = (credentials: any) =>
+//     request.post('/auth/login', credentials);
 export const login = (credentials: any) =>
-    request.post('/auth/login', credentials);
+    Promise.resolve({
+        status: 200,
+        data: { success: true, data: credentials }
+    });
 
 export const logout = () => request.get('/auth/logout');
 
@@ -28,5 +33,12 @@ export const activation = (email: string, token: string) =>
 export const resendActivation = ({ email }: { email: string }) =>
     request.post('/auth/resend-activation', { email });
 
-export const verify = () => request.get('/auth/verify');
+// mock verify:
+// export const verify = () => request.get('/auth/verify');
+export const verify = () =>
+    Promise.resolve({
+        status: 200,
+        data: { success: false, data: 'success' }
+    });
+
 export const verifyV2 = () => getData('/auth/verify');
