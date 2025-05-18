@@ -38,7 +38,7 @@ export const resendActivation = ({ email }: { email: string }) =>
 export const verify = () =>
     Promise.resolve({
         status: 200,
-        data: { success: true, data: 'success' }
+        data: { success: false, data: 'success' }
     });
 
 export const verifyV2 = () => getData('/auth/verify');
