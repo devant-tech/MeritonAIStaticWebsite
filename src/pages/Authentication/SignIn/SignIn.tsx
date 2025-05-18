@@ -16,8 +16,8 @@ import { styled } from '@mui/material/styles';
 import ForgotPassword from '@pages/Authentication/ForgotPassword/ForgotPassword';
 import ColorModeIconDropdown from '@components/Menu/ColorModeIconDropdown';
 import {
-    GoogleIcon,
-    FacebookIcon
+    GoogleIcon
+    // FacebookIcon
     // SitemarkIcon
 } from '@pages/Authentication/SignIn/CustomIcons';
 import { useAuth } from '@contexts/use-auth';
@@ -261,14 +261,6 @@ export default function SignIn() {
                             startIcon={<GoogleIcon />}
                         >
                             Sign in with Google
-                        </Button>
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            onClick={() => alert('Sign in with Facebook')}
-                            startIcon={<FacebookIcon />}
-                        >
-                            Sign in with Facebook
                         </Button>
                         <Typography sx={{ textAlign: 'center' }}>
                             Don&apos;t have an account?{' '}
