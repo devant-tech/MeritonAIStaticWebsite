@@ -9,19 +9,30 @@ import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 import { exportSTL, uploadSTL } from './index';
 import FFD, { ParametricCoordinate } from './ffd';
 
+// Default configuration values for the 3D scene
 const DEFAULT_MODEL_URL = 'sample.stl';
 const DEFAULT_SKELETON_URL = 'skeleton.stl';
 const DEFAULT_OUTPUT_NAME = 'output.stl';
 const DEFAULT_GRID_DIMENSION: [number, number, number] = [2, 1, 2];
 
+// Matrix for handling transformations
 const matrix = new THREE.Matrix4();
 
+/**
+ * Interface for control points used in model deformation
+ */
 interface ControlPoint {
     id: string;
     ref: THREE.Vector3;
     position: [number, number, number];
 }
 
+/**
+ * Calculates the center point of a geometry
+ * @param geometry - The geometry to calculate center for
+ * @param center - Optional vector to store the result
+ * @returns The center point of the geometry
+ */
 const getCenter = (
     geometry: THREE.BufferGeometry,
     center = new THREE.Vector3()
@@ -31,6 +42,11 @@ const getCenter = (
     return center;
 };
 
+/**
+ * Normalizes the geometry for consistent scaling and orientation
+ * @param geometry - The geometry to normalize
+ * @returns The normalized geometry
+ */
 const customNormalize = (geometry: THREE.BufferGeometry) => {
     const transformed = geometry.clone();
     transformed.scale(0.01, 0.01, 0.01);
@@ -40,6 +56,11 @@ const customNormalize = (geometry: THREE.BufferGeometry) => {
     return transformed;
 };
 
+/**
+ * Denormalizes the geometry back to original scale
+ * @param geometry - The geometry to denormalize
+ * @returns The denormalized geometry
+ */
 const customDenormalize = (geometry: THREE.BufferGeometry) => {
     const transformed = geometry.clone();
     transformed.rotateY(-Math.PI / 2);
@@ -48,12 +69,22 @@ const customDenormalize = (geometry: THREE.BufferGeometry) => {
     return transformed;
 };
 
+/**
+ * Custom hook for loading and processing STL files
+ * @param url - The URL of the STL file to load
+ * @returns The processed geometry
+ */
 const useSTLGeometry = (url: string) => {
     const geometry = useLoader(STLLoader, url);
     return useMemo(() => customNormalize(geometry), [geometry]);
 };
 
+/**
+ * Main Scene Component
+ * Handles 3D model loading, manipulation, and interaction
+ */
 const Scene = () => {
+    // Refs and state management
     const meshRef = useRef<THREE.Mesh>(null!);
     const [selected, setSelected] = useState<THREE.Object3D | null>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -62,25 +93,34 @@ const Scene = () => {
         [number, number, number]
     >(DEFAULT_GRID_DIMENSION);
 
+    // Model URLs state
     const [implantDataUrl, setImplantDataUrl] =
         useState<string>(DEFAULT_MODEL_URL);
     const [skeletonDataUrl, setSkeletonDataUrl] =
         useState<string>(DEFAULT_SKELETON_URL);
+
+    // Load geometries
     const modelGeometry = useSTLGeometry(implantDataUrl);
     const skeletonGeometry = useSTLGeometry(skeletonDataUrl);
 
+    // Initialize FFD (Free-Form Deformation) and control points
     const [ffd, controlPoints] = useMemo(() => {
+        // Get position attribute from geometry
         const position = modelGeometry.getAttribute(
             'position'
         ) as THREE.BufferAttribute;
+        // Create parametric coordinate system from bounding box
         const coord = ParametricCoordinate.fromBbox(
             new THREE.Box3().setFromBufferAttribute(position)
         );
+        // Initialize FFD with geometry and grid dimensions
         const ffd = new FFD(modelGeometry, coord, ...gridDimension);
 
+        // Filter control points for surface manipulation
         const filteredPoints: THREE.Vector3[] = [];
         const { l, m, n } = ffd.controlPoints;
         for (const [point, i, j, k] of ffd.controlPoints) {
+            // Only keep points on the surface of the control grid
             if (
                 i === 0 ||
                 i === l ||
@@ -93,6 +133,7 @@ const Scene = () => {
             }
         }
 
+        // Create control points with unique IDs
         const controlPoints: ControlPoint[] = filteredPoints.map((point) => ({
             id: shortid.generate(),
             ref: point,
@@ -102,13 +143,18 @@ const Scene = () => {
         return [ffd, controlPoints];
     }, [modelGeometry, gridDimension]);
 
+    /**
+     * Handle drag operations for model deformation
+     */
     const handleDrag = useCallback(
         (m: THREE.Matrix4) => {
             matrix.copy(m);
             if (selected) {
+                // Update selected point position and rotation
                 selected.position.setFromMatrixPosition(m);
                 selected.rotation.setFromRotationMatrix(m);
 
+                // Update control point and deform model
                 const { index } = selected.userData;
                 controlPoints[index].ref.copy(selected.position);
                 ffd.deform();
@@ -117,8 +163,13 @@ const Scene = () => {
         [selected, ffd, controlPoints]
     );
 
+    /**
+     * Setup GUI controls and event handlers
+     */
     useEffect(() => {
+        // Initialize GUI
         const gui = new GUI();
+        // Position GUI panel
         gui.domElement.style.position = 'fixed';
         gui.domElement.style.top = '50%';
         gui.domElement.style.right = '32px';
@@ -126,14 +177,14 @@ const Scene = () => {
         gui.domElement.style.transform = 'translateY(-50%)';
         gui.domElement.style.zIndex = '1300';
 
-        // Make draggable
+        // Make GUI draggable
         let isDragging = false;
         let offsetX = 0;
         let offsetY = 0;
 
+        // Mouse event handlers for GUI dragging
         const onMouseDown = (e: MouseEvent) => {
             isDragging = true;
-            // Get the mouse position relative to the panel
             offsetX = e.clientX - gui.domElement.getBoundingClientRect().left;
             offsetY = e.clientY - gui.domElement.getBoundingClientRect().top;
             document.body.style.userSelect = 'none';
@@ -152,11 +203,12 @@ const Scene = () => {
             document.body.style.userSelect = '';
         };
 
-        // Attach to the panel's title bar (or the whole panel)
+        // Add event listeners for GUI dragging
         gui.domElement.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
 
+        // GUI configuration
         const config = {
             showSkeleton: true,
             download: () => {
@@ -179,6 +231,9 @@ const Scene = () => {
             n: DEFAULT_GRID_DIMENSION[2]
         };
 
+        /**
+         * Add grid dimension controller to GUI
+         */
         const addGridDimensionController = (
             gui: GUI,
             property: keyof typeof config,
@@ -201,6 +256,7 @@ const Scene = () => {
                     setSelected(null);
                 });
 
+        // Add GUI controls
         gui.add(config, 'showSkeleton')
             .name('Show Skeleton')
             .onChange((value: boolean) => setShowSkeleton(value));
@@ -210,11 +266,14 @@ const Scene = () => {
         addGridDimensionController(gui, 'l', 'Width', 0);
         addGridDimensionController(gui, 'm', 'Height', 1);
         addGridDimensionController(gui, 'n', 'Length', 2);
+
+        // Cleanup
         return () => gui.destroy();
     }, []);
 
     return (
         <>
+            {/* Main model mesh with semi-transparent material */}
             <mesh geometry={modelGeometry} onClick={(e) => e.stopPropagation()}>
                 <meshStandardMaterial
                     color="#B17457"
@@ -223,6 +282,7 @@ const Scene = () => {
                 />
             </mesh>
 
+            {/* Wireframe mesh for visual reference */}
             <mesh ref={meshRef} geometry={modelGeometry}>
                 <meshStandardMaterial
                     color="white"
@@ -232,6 +292,7 @@ const Scene = () => {
                 />
             </mesh>
 
+            {/* Skeleton visualization with pivot controls */}
             <group position={[-0.33, 0.55, 0.025]} visible={showSkeleton}>
                 <PivotControls
                     scale={0.1}
@@ -246,6 +307,7 @@ const Scene = () => {
                 </PivotControls>
             </group>
 
+            {/* Control points group for model deformation */}
             <group
                 onPointerMissed={() => {
                     if (!isDragging) {
@@ -253,6 +315,7 @@ const Scene = () => {
                     }
                 }}
             >
+                {/* Pivot controls for selected point */}
                 <PivotControls
                     scale={0.1}
                     matrix={matrix}
@@ -264,6 +327,7 @@ const Scene = () => {
                     onDrag={handleDrag}
                 />
 
+                {/* Render control points as spheres */}
                 {controlPoints.map(({ id, position }, index) => (
                     <Sphere
                         key={id}
