@@ -322,41 +322,43 @@ const Scene = () => {
             </group>
 
             {/* Control points group for model deformation */}
-            <group
-                onPointerMissed={() => {
-                    if (!isDragging) {
-                        setSelected(null);
-                    }
-                }}
-            >
-                {/* Pivot controls for selected point */}
-                <PivotControls
-                    scale={0.1}
-                    matrix={matrix}
-                    visible={selected !== null}
-                    disableScaling
-                    disableSliders
-                    onDragStart={() => setIsDragging(true)}
-                    onDragEnd={() => setIsDragging(false)}
-                    onDrag={handleDrag}
-                />
+            {isImplantVisible && (
+                <group
+                    onPointerMissed={() => {
+                        if (!isDragging) {
+                            setSelected(null);
+                        }
+                    }}
+                >
+                    {/* Pivot controls for selected point */}
+                    <PivotControls
+                        scale={0.1}
+                        matrix={matrix}
+                        visible={selected !== null}
+                        disableScaling
+                        disableSliders
+                        onDragStart={() => setIsDragging(true)}
+                        onDragEnd={() => setIsDragging(false)}
+                        onDrag={handleDrag}
+                    />
 
-                {/* Render control points as spheres */}
-                {controlPoints.map(({ id, position }, index) => (
-                    <Sphere
-                        key={id}
-                        args={[0.008]}
-                        position={position}
-                        userData={{ index }}
-                        onClick={(e) => {
-                            matrix.copy(e.object.matrixWorld);
-                            setSelected(e.object);
-                        }}
-                    >
-                        <meshStandardMaterial color="white" />
-                    </Sphere>
-                ))}
-            </group>
+                    {/* Render control points as spheres */}
+                    {controlPoints.map(({ id, position }, index) => (
+                        <Sphere
+                            key={id}
+                            args={[0.008]}
+                            position={position}
+                            userData={{ index }}
+                            onClick={(e) => {
+                                matrix.copy(e.object.matrixWorld);
+                                setSelected(e.object);
+                            }}
+                        >
+                            <meshStandardMaterial color="white" />
+                        </Sphere>
+                    ))}
+                </group>
+            )}
         </>
     );
 };
