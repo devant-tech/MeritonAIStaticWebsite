@@ -93,6 +93,7 @@ const Scene = () => {
         [number, number, number]
     >(DEFAULT_GRID_DIMENSION);
     const [isImplantVisible, setIsImplantVisible] = useState(true);
+    const [hideMesh, setHideMesh] = useState(false);
 
     // Model URLs state
     const [implantDataUrl, setImplantDataUrl] =
@@ -230,7 +231,8 @@ const Scene = () => {
             l: DEFAULT_GRID_DIMENSION[0],
             m: DEFAULT_GRID_DIMENSION[1],
             n: DEFAULT_GRID_DIMENSION[2],
-            showImplant: true
+            showImplant: true,
+            hideMesh: false
         };
 
         /**
@@ -272,7 +274,22 @@ const Scene = () => {
         // Add implant visibility toggle
         gui.add(config, 'showImplant')
             .name('Show Implant')
-            .onChange((value: boolean) => setIsImplantVisible(value));
+            .onChange((value: boolean) => {
+                setIsImplantVisible(value);
+                if (!value) {
+                    setHideMesh(false);
+                    config.hideMesh = false;
+                    // Force GUI to update
+                    gui.controllers.forEach((controller) =>
+                        controller.updateDisplay()
+                    );
+                }
+            });
+
+        // Add hide mesh toggle
+        gui.add(config, 'hideMesh')
+            .name('Hide Mesh')
+            .onChange((value: boolean) => setHideMesh(value));
 
         // Cleanup
         return () => gui.destroy();
@@ -295,7 +312,7 @@ const Scene = () => {
             )}
 
             {/* Wireframe mesh with visibility toggle */}
-            {isImplantVisible && (
+            {isImplantVisible && !hideMesh && (
                 <mesh ref={meshRef} geometry={modelGeometry}>
                     <meshStandardMaterial
                         color="white"
