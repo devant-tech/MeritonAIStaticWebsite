@@ -32,7 +32,7 @@ const ExampleApp = () => (
             }}
         >
             {/* Scene background color */}
-            <color attach="background" args={['black']} />
+            <color attach="background" args={['lightgray']} />
 
             {/* Ambient light for overall scene illumination */}
             <ambientLight intensity={Math.PI / 2} />
