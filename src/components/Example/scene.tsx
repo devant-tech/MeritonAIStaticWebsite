@@ -92,6 +92,7 @@ const Scene = () => {
     const [gridDimension, setGridDimension] = useState<
         [number, number, number]
     >(DEFAULT_GRID_DIMENSION);
+    const [isImplantVisible, setIsImplantVisible] = useState(true);
 
     // Model URLs state
     const [implantDataUrl, setImplantDataUrl] =
@@ -228,7 +229,8 @@ const Scene = () => {
             },
             l: DEFAULT_GRID_DIMENSION[0],
             m: DEFAULT_GRID_DIMENSION[1],
-            n: DEFAULT_GRID_DIMENSION[2]
+            n: DEFAULT_GRID_DIMENSION[2],
+            showImplant: true
         };
 
         /**
@@ -267,30 +269,42 @@ const Scene = () => {
         addGridDimensionController(gui, 'm', 'Height', 1);
         addGridDimensionController(gui, 'n', 'Length', 2);
 
+        // Add implant visibility toggle
+        gui.add(config, 'showImplant')
+            .name('Show Implant')
+            .onChange((value: boolean) => setIsImplantVisible(value));
+
         // Cleanup
         return () => gui.destroy();
     }, []);
 
     return (
         <>
-            {/* Main model mesh with semi-transparent material */}
-            <mesh geometry={modelGeometry} onClick={(e) => e.stopPropagation()}>
-                <meshStandardMaterial
-                    color="#B17457"
-                    transparent
-                    opacity={0.95}
-                />
-            </mesh>
+            {/* Main model mesh with visibility toggle */}
+            {isImplantVisible && (
+                <mesh
+                    geometry={modelGeometry}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <meshStandardMaterial
+                        color="#B17457"
+                        transparent
+                        opacity={1}
+                    />
+                </mesh>
+            )}
 
-            {/* Wireframe mesh for visual reference */}
-            <mesh ref={meshRef} geometry={modelGeometry}>
-                <meshStandardMaterial
-                    color="white"
-                    transparent
-                    opacity={0.9}
-                    wireframe
-                />
-            </mesh>
+            {/* Wireframe mesh with visibility toggle */}
+            {isImplantVisible && (
+                <mesh ref={meshRef} geometry={modelGeometry}>
+                    <meshStandardMaterial
+                        color="white"
+                        transparent
+                        opacity={0.9}
+                        wireframe
+                    />
+                </mesh>
+            )}
 
             {/* Skeleton visualization with pivot controls */}
             <group position={[-0.33, 0.55, 0.025]} visible={showSkeleton}>
